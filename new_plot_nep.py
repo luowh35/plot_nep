@@ -174,10 +174,10 @@ if __name__ == "__main__":
     mae_force = com_MAE(force_train) * 1000
     mae_virial = com_MAE(virial_train) * 1000
     mae_stress = com_MAE(stress_train) * 1000
-    r2_ener = com_R2(energy_train) * 1000
-    r2_force = com_R2(force_train) * 1000
-    r2_virial = com_R2(virial_train) * 1000
-    r2_stress = com_R2(stress_train) * 1000
+    r2_ener = com_R2(energy_train) 
+    r2_force = com_R2(force_train) 
+    r2_virial = com_R2(virial_train) 
+    r2_stress = com_R2(stress_train) 
     if test_flag == 1:
         energy_test = np.loadtxt('energy_test.out')
         force_test = np.loadtxt('force_test.out')
@@ -192,10 +192,10 @@ if __name__ == "__main__":
         mae_force_test = com_MAE(force_test) * 1000
         mae_virial_test = com_MAE(virial_test) * 1000
         mae_stress_test = com_MAE(stress_test) * 1000
-        r2_ener_test = com_R2(energy_test) * 1000
-        r2_force_test = com_R2(force_test) * 1000
-        r2_virial_test = com_R2(virial_test) * 1000
-        r2_stress_test = com_R2(stress_test) * 1000
+        r2_ener_test = com_R2(energy_test) 
+        r2_force_test = com_R2(force_test) 
+        r2_virial_test = com_R2(virial_test) 
+        r2_stress_test = com_R2(stress_test) 
 
 
 
@@ -229,10 +229,10 @@ if __name__ == "__main__":
 
     ax_scatter.plot([ene_min, ene_max], [ene_min, ene_max], c="grey", lw=2, zorder=1)
     ax_scatter.scatter(energy_train[:, 1], energy_train[:, 0], marker='o', c="C0", s=25, alpha=0.5,
-                       label=f"Train dataset (RMSE={rmse_ener:.2f} mev/atom,MAE={mae_ener:.2f} mev/atom)", zorder=2)
+                       label=f"Train dataset (RMSE={rmse_ener:.2f} meV/atom,MAE={mae_ener:.2f} meV/atom)", zorder=2)
     if test_flag == 1:
         ax_scatter.scatter(energy_test[:, 1], energy_test[:, 0], marker='o', c="C6", s=25, alpha=0.5,
-                       label=f"Test dataset (RMSE={rmse_ener_test:.2f} mev/atom,MAE={mae_ener_test:.2f} mev/atom)", zorder=2)
+                       label=f"Test dataset (RMSE={rmse_ener_test:.2f} meV/atom,MAE={mae_ener_test:.2f} meV/atom)", zorder=2)
         ax_histx.hist(e_test, bins=50, color='C6')
     ax_histx.hist(e_train, bins=50, color='C0')
 
