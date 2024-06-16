@@ -46,25 +46,10 @@ lw = 4.0
 font = {'size': fontsize}
 line_width = 3
 dot_size = 70
-number_of_histix_bins=number_of_histix_bins 
+number_of_histix_bins = 50
 matplotlib.rc('font', **font)
 matplotlib.rc('axes', lw=aw)
 
-def handle_data(input_file, output_file):
-    with open(input_file, 'r') as infile:
-        reader = csv.reader(infile, delimiter=' ')
-        rows = list(reader)
-        
-    with open(output_file, 'w', newline='') as outfile:
-        writer = csv.writer(outfile, delimiter=' ')
-
-        for row in rows:
-            try:
-                value = float(row[6])
-                if abs(value) < 1e5:
-                    writer.writerow(row)
-            except ValueError:
-                continue
 
 def set_fig_properties(ax_list):
     tl = 7
@@ -86,30 +71,20 @@ def plot_nep(pout):
     plt.gcf().set_size_inches(9, 3)
     plt.savefig(pout, dpi=300)
 
-def com_RMSE(fin):
+def compute_metrics(fin):
     nclo = int(fin.shape[1] / 2)
     pids = fin[:, nclo] > -1e5
     targe = fin[pids, :nclo].reshape(-1)
     predi = fin[pids, nclo:].reshape(-1)
-    return np.sqrt(((predi - targe) ** 2).mean())
-
-def com_MAE(fin):
-    nclo = int(fin.shape[1] / 2)
-    pids = fin[:, nclo] > -1e5
-    targe = fin[pids, :nclo].reshape(-1)
-    predi = fin[pids, nclo:].reshape(-1)
-    return np.mean(np.abs(predi - targe))
-
-def com_R2(fin):
-    nclo = int(fin.shape[1] / 2)
-    pids = fin[:, nclo] > -1e5
-    targe = fin[pids, :nclo].reshape(-1)
-    predi = fin[pids, nclo:].reshape(-1)
+    # Compute RMSE
+    rmse = np.sqrt(((predi - targe) ** 2).mean()) * 1000
+    # Compute MAE
+    mae = np.mean(np.abs(predi - targe)) * 1000
+    # Compute R2
     tss = np.sum((targe - np.mean(targe)) ** 2)
     rss = np.sum((predi - targe) ** 2)
     r2 = 1 - (rss / tss)
-    return r2
-
+    return rmse, mae, r2
 
 def read_data(file_path):
     try:
@@ -169,36 +144,20 @@ if __name__ == "__main__":
     virial_train = np.loadtxt('virial_train.out')
     stress_train = np.loadtxt('stress_train.out')
 
-    rmse_ener = com_RMSE(energy_train) * 1000
-    rmse_force = com_RMSE(force_train) * 1000
-    rmse_virial = com_RMSE(virial_train) * 1000
-    rmse_stress = com_RMSE(stress_train) * 1000
-    mae_ener = com_MAE(energy_train) * 1000
-    mae_force = com_MAE(force_train) * 1000
-    mae_virial = com_MAE(virial_train) * 1000
-    mae_stress = com_MAE(stress_train) * 1000
-    r2_ener = com_R2(energy_train) 
-    r2_force = com_R2(force_train) 
-    r2_virial = com_R2(virial_train) 
-    r2_stress = com_R2(stress_train) 
+    rmse_ener, mae_ener, r2_ener = compute_metrics(energy_train)
+    rmse_force, mae_force, r2_force = compute_metrics(force_train)
+    rmse_virial, mae_virial, r2_virial = compute_metrics(virial_train)
+    rmse_stress, mae_stress, r2_stress = compute_metrics(stress_train)
     if test_flag == 1:
         energy_test = np.loadtxt('energy_test.out')
         force_test = np.loadtxt('force_test.out')
         virial_test = np.loadtxt('virial_test.out')
         stress_test = np.loadtxt('stress_test.out')
 ####################READ TEST DATA##########################
-        rmse_ener_test = com_RMSE(energy_test) * 1000
-        rmse_force_test = com_RMSE(force_test) * 1000
-        rmse_virial_test = com_RMSE(virial_test) * 1000
-        rmse_stress_test = com_RMSE(stress_test) * 1000
-        mae_ener_test = com_MAE(energy_test) * 1000
-        mae_force_test = com_MAE(force_test) * 1000
-        mae_virial_test = com_MAE(virial_test) * 1000
-        mae_stress_test = com_MAE(stress_test) * 1000
-        r2_ener_test = com_R2(energy_test) 
-        r2_force_test = com_R2(force_test) 
-        r2_virial_test = com_R2(virial_test) 
-        r2_stress_test = com_R2(stress_test) 
+        rmse_ener, mae_ener, r2_ener = compute_metrics(energy_train)
+        rmse_force, mae_force, r2_force = compute_metrics(force_train)
+        rmse_virial, mae_virial, r2_virial = compute_metrics(virial_train)
+        rmse_stress, mae_stress, r2_stress = compute_metrics(stress_train)
 
 
 
@@ -314,6 +273,5 @@ if __name__ == "__main__":
     plt.setp(ax_histx.get_xticklabels(), visible=False)
 
     plt.tight_layout()
-    plt.show()
     plt.savefig('RMSE.png')
 
