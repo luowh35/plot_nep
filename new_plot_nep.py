@@ -154,10 +154,10 @@ if __name__ == "__main__":
         virial_test = np.loadtxt('virial_test.out')
         stress_test = np.loadtxt('stress_test.out')
 ####################READ TEST DATA##########################
-        rmse_ener, mae_ener, r2_ener = compute_metrics(energy_train)
-        rmse_force, mae_force, r2_force = compute_metrics(force_train)
-        rmse_virial, mae_virial, r2_virial = compute_metrics(virial_train)
-        rmse_stress, mae_stress, r2_stress = compute_metrics(stress_train)
+        rmse_ener_test, mae_ener_test, r2_ener_test = compute_metrics(energy_test)
+        rmse_force_test, mae_force_test, r2_force_test = compute_metrics(force_test)
+        rmse_virial_test, mae_virial_test, r2_virial_test = compute_metrics(virial_test)
+        rmse_stress_test, mae_stress_test, r2_stress_test = compute_metrics(stress_test) 
 
 
 
