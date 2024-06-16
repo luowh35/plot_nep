@@ -225,6 +225,7 @@ if __name__ == "__main__":
     plt.legend(loc="lower left", ncol=2, frameon=False, columnspacing=0.2)
 
     ax_scatter = axes[0, 1]
+    set_fig_properties([ax_scatter])
     ax_histx = divider[1].append_axes("top", 1.2, pad=0, sharex=ax_scatter)
     ene_min = np.min([np.min(energy_train), np.min(energy_test)]) if test_flag == 1 else np.min(energy_train)
     ene_max = np.max([np.max(energy_train), np.max(energy_test)]) if test_flag == 1 else np.max(energy_train)
@@ -250,7 +251,7 @@ if __name__ == "__main__":
     # Force
     ax_scatter = axes[1, 0]
     ax_histx = divider[2].append_axes("top", 1.2, pad=0, sharex=ax_scatter)
-    set_fig_properties([plt.gca()])
+    set_fig_properties([ax_scatter])
     for_min = np.min([np.min(force_train), np.min(force_test)]) if test_flag == 1 else np.min(force_train)
     for_max = np.max([np.max(force_train), np.max(force_test)]) if test_flag == 1 else np.max(force_train)
     for_min -= (for_max - for_min) * 0.1
@@ -274,7 +275,7 @@ if __name__ == "__main__":
 
     # Stress
     ax_scatter = axes[1, 1]
-    set_fig_properties([plt.gca()])
+    set_fig_properties([ax_scatter])
     ptra = stress_train[:, -1] > -1e-5
     ptes = stress_test[:, -1] > -1e-5 if test_flag == 1 else ptra
     vir_min = np.min([np.min(stress_train[ptra, :]), np.min(stress_test[ptes, :])]) if test_flag == 1 else np.min(
