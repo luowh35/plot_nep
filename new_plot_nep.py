@@ -40,10 +40,13 @@ def grep_flag():
 
 
 ##set figure properties
-aw = 1.5
-fs = 16
-lw = 2.0
-font = {'size': fs} 
+aw = 3
+fontsize = 25
+lw = 4.0
+font = {'size': fontsize}
+line_width = 3
+dot_size = 70
+number_of_histix_bins=number_of_histix_bins 
 matplotlib.rc('font', **font)
 matplotlib.rc('axes', lw=aw)
 
@@ -64,9 +67,9 @@ def handle_data(input_file, output_file):
                 continue
 
 def set_fig_properties(ax_list):
-    tl = 6
-    tw = 1.5
-    tlm = 3
+    tl = 7
+    tw = 3
+    tlm = 4
 
     for ax in ax_list:
         ax.tick_params(which='major', length=tl, width=tw)
@@ -206,6 +209,7 @@ if __name__ == "__main__":
     plt.subplot(2, 2, 1)
     set_fig_properties([plt.gca()])
     plt.loglog(loss[:, 0], loss[:, 1], ls="-", lw=lw, c="C1", label="Total")
+    plt.loglog(loss[:, 0], loss[:, 2],  ls="-", lw=lw, c = "C4", label=r"$L_{1}$")
     plt.loglog(loss[:, 0], loss[:, 3], ls="-", lw=lw, c="C5", label=r"$L_{2}$")
     plt.loglog(loss[:, 0], loss[:, 4], ls="-", lw=lw, c="C0", label="Energy_train")
     plt.loglog(loss[:, 0], loss[:, 5], ls="-", lw=lw, c="C2", label="Force_train")
@@ -218,7 +222,7 @@ if __name__ == "__main__":
 
     plt.xlabel('Generation')
     plt.ylabel('Loss')
-    plt.legend(loc="lower left", ncol=2, fontsize=14, frameon=False, columnspacing=0.2)
+    plt.legend(loc="lower left", ncol=2, frameon=False, columnspacing=0.2)
 
     ax_scatter = axes[0, 1]
     ax_histx = divider[1].append_axes("top", 1.2, pad=0, sharex=ax_scatter)
@@ -228,13 +232,13 @@ if __name__ == "__main__":
     ene_max += (ene_max - ene_min) * 0.1
 
     ax_scatter.plot([ene_min, ene_max], [ene_min, ene_max], c="grey", lw=2, zorder=1)
-    ax_scatter.scatter(energy_train[:, 1], energy_train[:, 0], marker='o', c="C0", s=25, alpha=0.5,
+    ax_scatter.scatter(energy_train[:, 1], energy_train[:, 0], marker='o', c="C0", s=dot_size, alpha=0.5,
                        label=f"Train dataset (RMSE={rmse_ener:.2f} meV/atom,MAE={mae_ener:.2f} meV/atom)", zorder=2)
     if test_flag == 1:
-        ax_scatter.scatter(energy_test[:, 1], energy_test[:, 0], marker='o', c="C6", s=25, alpha=0.5,
+        ax_scatter.scatter(energy_test[:, 1], energy_test[:, 0], marker='o', c="C6", s=dot_size, alpha=0.5,
                        label=f"Test dataset (RMSE={rmse_ener_test:.2f} meV/atom,MAE={mae_ener_test:.2f} meV/atom)", zorder=2)
-        ax_histx.hist(e_test, bins=50, color='C6')
-    ax_histx.hist(e_train, bins=50, color='C0')
+        ax_histx.hist(e_test, bins=number_of_histix_bins, color='C6')
+    ax_histx.hist(e_train, bins=number_of_histix_bins, color='C0')
 
     ax_histx.yaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter(useMathText=True))
     ax_histx.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
@@ -252,14 +256,14 @@ if __name__ == "__main__":
     for_min -= (for_max - for_min) * 0.1
     for_max += (for_max - for_min) * 0.1
 
-    ax_scatter.plot([for_min, for_max], [for_min, for_max], c="grey", lw=3, zorder=1)
-    ax_scatter.scatter(force_train[:, 3], force_train[:, 0], marker='o', c="C2", s=25, alpha=0.5,
+    ax_scatter.plot([for_min, for_max], [for_min, for_max], c="grey", lw=line_width, zorder=1)
+    ax_scatter.scatter(force_train[:, 3], force_train[:, 0], marker='o', c="C2", s=dot_size, alpha=0.5,
                        label=f"Train dataset (RMSE={rmse_force:.2f} meV/${{\\rm{{\AA}}}}$)")
-    ax_histx.hist(f_train, bins=50, color='C2')
+    ax_histx.hist(f_train, bins=number_of_histix_bins, color='C2')
     if test_flag == 1:
-        ax_scatter.scatter(force_test[:, 3], force_test[:, 0], marker='o', c="C7", s=25, alpha=0.5,
+        ax_scatter.scatter(force_test[:, 3], force_test[:, 0], marker='o', c="C7", s=dot_size, alpha=0.5,
                        label=f"Test dataset (RMSE={rmse_force_test:.2f} meV/${{\\rm{{\AA}}}}$,MAE={mae_force_test:.2f} meV/${{\\rm{{\AA}}}}$)", zorder=2)
-        ax_histx.hist(f_test, bins=50, color='C7')
+        ax_histx.hist(f_test, bins=number_of_histix_bins, color='C7')
 
     ax_histx.yaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter(useMathText=True))
     ax_histx.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
@@ -280,26 +284,26 @@ if __name__ == "__main__":
     vir_min -= (vir_max - vir_min) * 0.1
     vir_max += (vir_max - vir_min) * 0.1
     ax_histx = divider[3].append_axes("top", 1.2, pad=0, sharex=ax_scatter)
-    ax_scatter.plot([vir_min, vir_max], [vir_min, vir_max], c="grey", lw=3, zorder=1)
+    ax_scatter.plot([vir_min, vir_max], [vir_min, vir_max], c="grey", lw=line_width, zorder=1)
 
     if stress_train.shape[1] == 2:
-        ax_scatter.scatter(stress_train[ptra, 1], stress_train[ptra, 0], marker='o', c='C3', s=25, alpha=0.5,
-                           label=f"Train dataset (RMSE={rmse_virial:.2f} MPa)")
-        ax_histx.hist(stress_train[ptra, 1], bins=50, color='C3')
+        ax_scatter.scatter(stress_train[ptra, 1], stress_train[ptra, 0], marker='o', c='C3', s=dot_size, alpha=0.5,
+                           label=f"Train dataset:\n(RMSE={rmse_force:.2f} meV/${{\\rm{{\AA}}}}$;\n MAE={mae_force:.2f} meV/${{\\rm{{\AA}}}}$; \n R$^2$={r2_force:.3f})")
+        ax_histx.hist(stress_train[ptra, 1], bins=number_of_histix_bins, color='C3')
         
         if test_flag == 1:
-            ax_scatter.scatter(stress_test[ptes, 1], stress_test[ptes, 0], marker='o', c="C8", s=25, alpha=0.5,
+            ax_scatter.scatter(stress_test[ptes, 1], stress_test[ptes, 0], marker='o', c="C8", s=dot_size, alpha=0.5,
                        label=f"Test dataset (RMSE={rmse_virial_test:.2f} MPa,MAE={mae_virial_test:.2f} MPa)", zorder=2)
-            ax_histx.hist(v_test, bins=50, color='C8')
+            ax_histx.hist(v_test, bins=number_of_histix_bins, color='C8')
 
     elif stress_train.shape[1] == 12:
-        ax_scatter.scatter(stress_train[ptra, 7:12], stress_train[ptra, 1:6], marker='o', c='C3', s=25, alpha=0.5,
-                           label=f"Train dataset (RMSE={rmse_virial:.2f} MPa)")
-        ax_histx.hist(stress_train[ptra, 1], bins=50, color='C3')
+        ax_scatter.scatter(stress_train[ptra, 7:12], stress_train[ptra, 1:6], marker='o', c='C3', s=dot_size, alpha=0.5,
+                           label=f"Train dataset:\n(RMSE={rmse_virial:.2f} MPa;\n MAE={mae_virial:.2f} MPa;\n R$^2$={r2_virial:.3f})")
+        ax_histx.hist(stress_train[ptra, 1], bins=number_of_histix_bins, color='C3')
         if test_flag == 1:
-            ax_scatter.scatter(stress_test[ptes, 7:12], stress_test[ptes, 1:6], marker='o', c="C8", s=25, alpha=0.5,
+            ax_scatter.scatter(stress_test[ptes, 7:12], stress_test[ptes, 1:6], marker='o', c="C8", s=dot_size, alpha=0.5,
                        label=f"Test dataset (RMSE={rmse_virial_test:.2f} MPa,MAE={mae_virial_test:.2f} MPa)", zorder=2)
-            ax_histx.hist(v_test, bins=50, color='C8')
+            ax_histx.hist(v_test, bins=number_of_histix_bins, color='C8')
 
     ax_histx.yaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter(useMathText=True))
     ax_histx.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
