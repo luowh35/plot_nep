@@ -1,5 +1,5 @@
 # plot_nep
-referrace:
+reference:
 https://github.com/Kick-H
 
 newplot_nep.py:
