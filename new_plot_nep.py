@@ -191,7 +191,7 @@ if __name__ == "__main__":
     ene_min -= (ene_max - ene_min) * 0.1
     ene_max += (ene_max - ene_min) * 0.1
 
-    ax_scatter.plot([ene_min, ene_max], [ene_min, ene_max], c="grey", lw=2, zorder=1)
+    ax_scatter.plot([ene_min, ene_max], [ene_min, ene_max], c="grey", lw=line_width, zorder=1)
     ax_scatter.scatter(energy_train[:, 1], energy_train[:, 0], marker='o', c="C0", s=dot_size, alpha=0.5,
                        label=f"Train dataset (RMSE={rmse_ener:.2f} meV/atom,MAE={mae_ener:.2f} meV/atom)", zorder=2)
     if test_flag == 1:
